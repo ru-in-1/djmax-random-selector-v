@@ -21,6 +21,7 @@ namespace DjmaxRandomSelectorV
         private readonly Dmrsv3Configuration _config;
         private readonly RandomSelector _rs;
         private readonly TrackDB _db;
+        private readonly GameLanguageContainer _gameLanguageContainer;
         private readonly CategoryContainer _categoryContainer;
         private readonly VersionContainer _versionContainer;
         private readonly UpdateManager _updater;
@@ -42,6 +43,9 @@ namespace DjmaxRandomSelectorV
                 _config = new Dmrsv3Configuration();
             }
             _container.Instance(_config);
+
+            _gameLanguageContainer = new GameLanguageContainer();
+            _container.Instance(_gameLanguageContainer);
             
             _categoryContainer = new CategoryContainer();
             _container.Instance(_categoryContainer);
@@ -99,10 +103,12 @@ namespace DjmaxRandomSelectorV
                 Application.Shutdown();
                 return;
             }
+            _gameLanguageContainer.SetGameLanguages(appdata);
             _categoryContainer.SetCategories(appdata);
             // Set AllTrack
             _db.Initialize(appdata);
             _db.ImportDB();
+            _db.ApplyLanguage(_config.GameLanguage);
             _db.SetPlayable(_config.OwnedDlcs);
             // Bind views and viewmodels
             await DisplayRootViewForAsync(typeof(ShellViewModel));

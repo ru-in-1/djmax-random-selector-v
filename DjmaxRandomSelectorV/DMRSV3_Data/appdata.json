@@ -1,4 +1,18 @@
 ﻿{
+    "gameLanguages": [
+        {
+            "key": "ko_KR",
+            "value": "KOREAN"
+        },
+        {
+            "key": "ja_JP",
+            "value": "JAPANESE"
+        },
+        {
+            "key": "en_US",
+            "value": "ENGLISH"
+        }
+    ],
     "categoryType": [
         "Regular",
         "CollabMusicGame",

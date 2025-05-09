@@ -15,6 +15,7 @@ namespace DjmaxRandomSelectorV
         public bool SavesRecents { get; set; } = false;
         public List<int> RecentPlayed { get; set; } = new();
         public uint StartKeyCode { get; set; } = 118;
+        public string GameLanguage { get; set; } = "ko_KR";
 
         /*************** Filter Option *****************/
         public int RecentsCount { get; set; } = 5;

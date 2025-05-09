@@ -60,6 +60,22 @@
                     <TextBlock Text="SELECTOR SETTING"
                                Style="{StaticResource SettingCategoryText}"
                                Margin="0 0 0 -5"/>
+                    <!-- In-game Language Setting -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="IN-GAME LANGUAGE"/>
+                        <ComboBox x:Name="GameLanguageSelector"
+                                 Grid.Column="1"
+                                 Width="120"
+                                 HorizontalAlignment="Right"
+                                 Margin="0 0 10 0"
+                                 ItemsSource="{Binding GameLanguages}"
+                                 DisplayMemberPath="Value"
+                                 SelectedValuePath="Key"/>
+                    </Grid>
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>

@@ -4,6 +4,7 @@ namespace DjmaxRandomSelectorV
 {
     public class Dmrsv3AppData
     {
+        public GameLanguage[] GameLanguages { get; set; }
         public string[] CategoryType { get; set; }
         public string[] BasicCategories { get; set; }
         public Category[] Categories { get; set; }

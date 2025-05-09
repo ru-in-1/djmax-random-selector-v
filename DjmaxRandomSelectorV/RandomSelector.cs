@@ -130,6 +130,7 @@ namespace DjmaxRandomSelectorV
         public Task HandleAsync(SettingMessage message, CancellationToken cancellationToken)
         {
             _locator.InputInterval = message.InputInterval;
+            _db.ApplyLanguage(message.GameLanguage);
             _db.SetPlayable(message.OwnedDlcs);
             _locator.MakeLocations(_db.AllTrack);
             UpdateCandidates();

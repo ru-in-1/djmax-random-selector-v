@@ -11,8 +11,10 @@ namespace DjmaxRandomSelectorV
     public class TrackDB
     {
         private const string AllTrackFilePath = @"DMRSV3_Data\AllTrackList.json";
+        private const string TrackTitleFilePath = @"DMRSV3_Data\TrackTitle.{0}.json";
 
         private readonly IFileManager _fileManager;
+        private Dictionary<string, string> _trackTitleMappings;
 
         private string[] _basicCategories;
         private LinkDiscItem[] _linkDisc;
@@ -30,6 +32,23 @@ namespace DjmaxRandomSelectorV
         {
             _basicCategories = appdata.BasicCategories;
             _linkDisc = appdata.LinkDisc;
+        }
+
+        private void LoadTrackTitleMapping(string language)
+        {
+            if (language == "ko_KR") return;
+
+            try
+            {
+                var mappingPath = string.Format(TrackTitleFilePath, language);
+                var mapping = _fileManager.Import<TrackTitleMapping>(mappingPath);
+                _trackTitleMappings = mapping.TrackTitles;
+            }
+            catch (Exception)
+            {
+                // If mapping file doesn't exist or is invalid, use Korean titles
+                _trackTitleMappings = new Dictionary<string, string>();
+            }
         }
 
         public void ImportDB()
@@ -61,6 +80,28 @@ namespace DjmaxRandomSelectorV
             }).AsReadOnly();
         }
 
+        public void ApplyLanguage(string language)
+        {
+            if (language == "ko_KR") return;
+            
+            LoadTrackTitleMapping(language);
+            AllTrack = AllTrack.Select(track =>
+            {
+                var info = track.Info with { Title = GetLocalizedTitle(track.Info.Title) };
+                return track with { Info = info };
+            }).ToList().AsReadOnly();
+        }
+
+        private string GetLocalizedTitle(string koreanTitle)
+        {
+            if (_trackTitleMappings.TryGetValue(koreanTitle, out var localizedTitle))
+            {
+                return localizedTitle;
+            }
+
+            return koreanTitle;
+        }
+
         public void SetPlayable(IEnumerable<string> ownedDlcs)
         {
             var categories = ownedDlcs.Concat(_basicCategories);
@@ -87,6 +128,11 @@ namespace DjmaxRandomSelectorV
             public int Level { get; init; }
             public double Floor { get; init; }
             public int Rating { get; init; }
+        }
+
+        public record TrackTitleMapping
+        {
+            public Dictionary<string, string> TrackTitles { get; init; }
         }
     }
 }

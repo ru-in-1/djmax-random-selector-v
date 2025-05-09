@@ -17,6 +17,7 @@ namespace DjmaxRandomSelectorV.ViewModels
         private readonly IFileManager _fileManager;
         private readonly SettingMessage _message;
         private readonly List<Category> _categories;
+        private readonly List<GameLanguage> _gameLanguages;
 
         public bool IsPlaylist
         {
@@ -45,7 +46,17 @@ namespace DjmaxRandomSelectorV.ViewModels
                 NotifyOfPropertyChange();
             }
         }
+        public string GameLanguage
+        {
+            get { return _message.GameLanguage; }
+            set
+            {
+                _message.GameLanguage = value;
+                NotifyOfPropertyChange();
+            }
+        }
         public BindableCollection<ListUpdater> CategoryUpdaters { get; }
+        public BindableCollection<GameLanguage> AvailableGameLanguages { get; }
 
         public SettingViewModel(IEventAggregator eventAggregator, IFileManager fileManager)
         {
@@ -58,13 +69,18 @@ namespace DjmaxRandomSelectorV.ViewModels
                 FilterType = config.FilterType,
                 InputInterval = config.InputDelay,
                 SavesExclusion = config.SavesRecents,
-                OwnedDlcs = config.OwnedDlcs.ConvertAll(x => x)
+                OwnedDlcs = config.OwnedDlcs.ConvertAll(x => x),
+                GameLanguage = config.GameLanguage
             };
 
             _categories = IoC.Get<CategoryContainer>().GetCategories();
             _categories.RemoveAll(x => string.IsNullOrEmpty(x.SteamId) && x.Type != 3); //TODO: use enum
             var updaters = _categories.ConvertAll(x => new ListUpdater(x.Name, x.Id, _message.OwnedDlcs));
             CategoryUpdaters = new BindableCollection<ListUpdater>(updaters);
+
+            // Initialize available game languages from container
+            _gameLanguages = IoC.Get<GameLanguageContainer>().GetGameLanguages();
+            AvailableGameLanguages = new BindableCollection<GameLanguage>(_gameLanguages);
         }
 
         public void DetectDlcs()
@@ -100,6 +116,7 @@ namespace DjmaxRandomSelectorV.ViewModels
             config.InputDelay = _message.InputInterval;
             config.SavesRecents = _message.SavesExclusion;
             config.OwnedDlcs = _message.OwnedDlcs.ConvertAll(x => x);
+            config.GameLanguage = _message.GameLanguage;
 
             _fileManager.Export(config, ConfigPath);
             _eventAggregator.PublishOnUIThreadAsync(_message);
