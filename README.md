@@ -2,7 +2,7 @@
 
 ## Extension of this folk
 
-Trying to add in-game language settings for random selection.
+Trying to add in-game language settings for random selection.\n
 Supported: ja_JP(日本語)
 
 ## Introduction
