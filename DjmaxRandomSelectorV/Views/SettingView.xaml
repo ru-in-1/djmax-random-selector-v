@@ -75,7 +75,8 @@
                                  ItemsSource="{Binding AvailableGameLanguages}"
                                  DisplayMemberPath="Value"
                                  SelectedValuePath="Key"
-                                 SelectedValue="{Binding GameLanguage}"/>
+                                 SelectedValue="{Binding GameLanguage}"
+                                 Style="{StaticResource SettingComboBox}"/>
                     </Grid>
                     <Grid>
                         <Grid.ColumnDefinitions>

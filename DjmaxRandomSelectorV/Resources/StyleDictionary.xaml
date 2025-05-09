@@ -406,6 +406,89 @@
             </Setter.Value>
         </Setter>
     </Style>
+    <Style x:Key="SettingComboBox" TargetType="{x:Type ComboBox}">
+        <Setter Property="Foreground" Value="{StaticResource DefaultGrayColor}"/>
+        <Setter Property="FontFamily" Value="{StaticResource LatoBlackFont}"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Padding" Value="5,0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ComboBox}">
+                    <Grid>
+                        <Grid>
+                            <TextBlock x:Name="SelectedItemText"
+                                     Text="{Binding Path=SelectedItem.Value, RelativeSource={RelativeSource TemplatedParent}}"
+                                     Foreground="{TemplateBinding Foreground}"
+                                     FontFamily="{TemplateBinding FontFamily}"
+                                     FontSize="{TemplateBinding FontSize}"
+                                     VerticalAlignment="Center"/>
+                            <ToggleButton x:Name="ToggleButton"
+                                        IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                        ClickMode="Press"
+                                        Background="Transparent"
+                                        BorderThickness="0">
+                                <ToggleButton.Template>
+                                    <ControlTemplate TargetType="{x:Type ToggleButton}">
+                                        <Border Background="Transparent"
+                                                BorderThickness="0">
+                                            <Path x:Name="Arrow"
+                                                  Fill="{TemplateBinding Foreground}"
+                                                  HorizontalAlignment="Right"
+                                                  VerticalAlignment="Center"
+                                                  Data="M0,0 L4,0 L2,4 Z"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </ToggleButton.Template>
+                            </ToggleButton>
+                        </Grid>
+                        <Popup x:Name="PART_Popup"
+                               AllowsTransparency="True"
+                               IsOpen="{TemplateBinding IsDropDownOpen}"
+                               Placement="Bottom"
+                               PopupAnimation="Slide">
+                            <Border Background="{StaticResource DarkerTranslucentBackgroundColor}"
+                                    BorderBrush="{StaticResource DefaultGrayColor}"
+                                    BorderThickness="1">
+                                <ScrollViewer MaxHeight="{TemplateBinding MaxDropDownHeight}"
+                                            SnapsToDevicePixels="True">
+                                    <ItemsPresenter/>
+                                </ScrollViewer>
+                            </Border>
+                        </Popup>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Resources>
+            <Style TargetType="{x:Type ComboBoxItem}">
+                <Setter Property="Foreground" Value="{StaticResource DefaultGrayColor}"/>
+                <Setter Property="FontFamily" Value="{StaticResource LatoBlackFont}"/>
+                <Setter Property="FontSize" Value="13"/>
+                <Setter Property="Padding" Value="5,3"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ComboBoxItem}">
+                            <Border Background="Transparent"
+                                    BorderThickness="0">
+                                <TextBlock Text="{Binding Value}"
+                                         VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#3D3E3F"/>
+                                </Trigger>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Foreground" Value="White"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </Style.Resources>
+    </Style>
     <!--#endregion-->
     
     <!--#region Setting Slider-->
