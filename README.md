@@ -1,8 +1,9 @@
 # DJMAX Random Selector V
 
-## extension of this folk
+## Extension of this folk
 
-Trying to handle in-game language settings.
+Trying to add in-game language settings for random selection.
+Supported: ja_JP(日本語)
 
 ## Introduction
 
