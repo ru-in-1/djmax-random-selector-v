@@ -1,5 +1,9 @@
 # DJMAX Random Selector V
 
+## extension of this folk
+
+Trying to handle in-game language settings.
+
 ## Introduction
 
 A program for selecting music randomly in DJMAX RESPECT V. Set the filter you want and play instantly without thinking about what music to choose.

@@ -32,5 +32,6 @@ namespace DjmaxRandomSelectorV
         /*************** Version Info *****************/
         public long AllTrackVersion { get; set; } = 0;
         public string AppdataVersion { get; set; } = string.Empty;
+        public string JaTitleVersion { get; set; } = string.Empty;
     }
 }

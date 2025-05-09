@@ -15,7 +15,7 @@ namespace DjmaxRandomSelectorV
         private const string JaTitleDownloadUrl = "https://raw.githubusercontent.com/ru-in-1/djmax-random-selector-v/feature-language/DjmaxRandomSelectorV/DMRSV3_Data/TrackTitle.ja_JP.json";
         private const string AllTrackFilePath = @"DMRSV3_Data\AllTrackList.json";
         private const string AppdataFilePath = @"DMRSV3_Data\appdata.json";
-        private const string JapaneseTitleFilePath = @"DMRSV3_Data\TrackTitle.ja_JP.json";
+        private const string JaTitleFilePath = @"DMRSV3_Data\TrackTitle.ja_JP.json";
 
         private readonly VersionContainer _container;
         private readonly IFileManager _fileManager;
@@ -62,7 +62,7 @@ namespace DjmaxRandomSelectorV
                 tasks.Add(DownloadAppdataAsync());
             }
             // update japanese title
-            if (!File.Exists(JapaneseTitleFilePath)
+            if (!File.Exists(JaTitleFilePath)
                 || versions[2].CompareTo(_container.JaTitleVersion) > 0)
             {
                 Debug.WriteLine("japanese title update start");
@@ -122,7 +122,7 @@ namespace DjmaxRandomSelectorV
             try
             {
                 string result = await _fileManager.RequestAsync(JaTitleDownloadUrl);
-                _fileManager.Write(result, JapaneseTitleFilePath);
+                _fileManager.Write(result, JaTitleFilePath);
             }
             catch
             {
