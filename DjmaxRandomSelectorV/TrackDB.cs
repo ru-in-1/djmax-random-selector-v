@@ -41,8 +41,7 @@ namespace DjmaxRandomSelectorV
             try
             {
                 var mappingPath = string.Format(TrackTitleFilePath, language);
-                var mapping = _fileManager.Import<TrackTitleMapping>(mappingPath);
-                _trackTitleMappings = mapping.TrackTitles;
+                _trackTitleMappings = _fileManager.Import<Dictionary<string, string>>(mappingPath);
             }
             catch (Exception)
             {
@@ -128,11 +127,6 @@ namespace DjmaxRandomSelectorV
             public int Level { get; init; }
             public double Floor { get; init; }
             public int Rating { get; init; }
-        }
-
-        public record TrackTitleMapping
-        {
-            public Dictionary<string, string> TrackTitles { get; init; }
         }
     }
 }

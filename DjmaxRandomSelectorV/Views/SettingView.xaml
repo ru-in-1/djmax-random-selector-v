@@ -72,9 +72,10 @@
                                  Width="120"
                                  HorizontalAlignment="Right"
                                  Margin="0 0 10 0"
-                                 ItemsSource="{Binding GameLanguages}"
+                                 ItemsSource="{Binding AvailableGameLanguages}"
                                  DisplayMemberPath="Value"
-                                 SelectedValuePath="Key"/>
+                                 SelectedValuePath="Key"
+                                 SelectedValue="{Binding GameLanguage}"/>
                     </Grid>
                     <Grid>
                         <Grid.ColumnDefinitions>
