@@ -21,7 +21,7 @@ namespace DjmaxRandomSelectorV
         private readonly Dmrsv3Configuration _config;
         private readonly RandomSelector _rs;
         private readonly TrackDB _db;
-        private readonly GameLanguageContainer _gameLanguageContainer;
+        private readonly List<string> _gameLanguages;
         private readonly CategoryContainer _categoryContainer;
         private readonly VersionContainer _versionContainer;
         private readonly UpdateManager _updater;
@@ -43,9 +43,9 @@ namespace DjmaxRandomSelectorV
                 _config = new Dmrsv3Configuration();
             }
             _container.Instance(_config);
-
-            _gameLanguageContainer = new GameLanguageContainer();
-            _container.Instance(_gameLanguageContainer);
+            
+            _gameLanguages = new List<string>();
+            _container.Instance(_gameLanguages);
             
             _categoryContainer = new CategoryContainer();
             _container.Instance(_categoryContainer);
@@ -56,7 +56,6 @@ namespace DjmaxRandomSelectorV
             var eventAggregator = IoC.Get<IEventAggregator>();
             _rs = new RandomSelector(eventAggregator, _db);
             _executor = new ExecutionHelper(eventAggregator);
-
 
             _versionContainer = new VersionContainer();
             _container.Instance(_versionContainer);
@@ -103,7 +102,7 @@ namespace DjmaxRandomSelectorV
                 Application.Shutdown();
                 return;
             }
-            _gameLanguageContainer.SetGameLanguages(appdata);
+            _gameLanguages.AddRange(appdata.GameLanguages);
             _categoryContainer.SetCategories(appdata);
             // Set AllTrack
             _db.Initialize(appdata);

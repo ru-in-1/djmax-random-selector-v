@@ -11,10 +11,10 @@ namespace DjmaxRandomSelectorV
     public class TrackDB
     {
         private const string AllTrackFilePath = @"DMRSV3_Data\AllTrackList.json";
-        private const string TrackTitleFilePath = @"DMRSV3_Data\TrackTitle.{0}.json";
+        private const string TrackLangFilePath = @"DMRSV3_Data\TrackLang.json";
 
         private readonly IFileManager _fileManager;
-        private Dictionary<string, string> _trackTitleMappings;
+        private Dictionary<string, Dictionary<string, string>> _trackLangMappings;
 
         private string[] _basicCategories;
         private LinkDiscItem[] _linkDisc;
@@ -32,22 +32,6 @@ namespace DjmaxRandomSelectorV
         {
             _basicCategories = appdata.BasicCategories;
             _linkDisc = appdata.LinkDisc;
-        }
-
-        private void LoadTrackTitleMapping(string language)
-        {
-            if (language == "ko_KR") return;
-
-            try
-            {
-                var mappingPath = string.Format(TrackTitleFilePath, language);
-                _trackTitleMappings = _fileManager.Import<Dictionary<string, string>>(mappingPath);
-            }
-            catch (Exception)
-            {
-                // If mapping file doesn't exist or is invalid, use Korean titles
-                _trackTitleMappings = new Dictionary<string, string>();
-            }
         }
 
         public void ImportDB()
@@ -79,26 +63,31 @@ namespace DjmaxRandomSelectorV
             }).AsReadOnly();
         }
 
-        public void ApplyLanguage(string language)
+        public void ApplyLanguage(string lang)
         {
-            if (language == "ko_KR") return;
-            
-            LoadTrackTitleMapping(language);
-            AllTrack = AllTrack.Select(track =>
+            // Load all language mappings from TrackLang.json if not loaded
+            if (_trackLangMappings == null)
             {
-                var info = track.Info with { Title = GetLocalizedTitle(track.Info.Title) };
-                return track with { Info = info };
-            }).ToList().AsReadOnly();
-        }
-
-        private string GetLocalizedTitle(string koreanTitle)
-        {
-            if (_trackTitleMappings.TryGetValue(koreanTitle, out var localizedTitle))
-            {
-                return localizedTitle;
+                _trackLangMappings = _fileManager.Import<Dictionary<string, Dictionary<string, string>>>(TrackLangFilePath);  
             }
-
-            return koreanTitle;
+            // If language mapping exists for the specified language
+            if (_trackLangMappings.TryGetValue(lang, out var langDict) && langDict != null)
+            {
+                // Create a dictionary for quick lookup
+                var trackDict = AllTrack.ToDictionary(t => t.Info.Id.ToString());
+                foreach (var kvp in langDict)
+                {
+                    // If the track exists, update its title
+                    if (trackDict.TryGetValue(kvp.Key, out var track))
+                    {
+                        var newInfo = track.Info with { Title = kvp.Value };
+                        trackDict[kvp.Key] = track with { Info = newInfo };
+                    }
+                }
+                // Update AllTrack with the new values, preserving order
+                AllTrack = AllTrack.Select(t => trackDict.TryGetValue(t.Info.Id.ToString(), out var updated) ? updated : t).ToList().AsReadOnly();
+            }
+            // If no mapping, do nothing (keep default titles)
         }
 
         public void SetPlayable(IEnumerable<string> ownedDlcs)

@@ -8,6 +8,6 @@ namespace DjmaxRandomSelectorV
         public Version LatestAppVersion { get; set; }
         public long AllTrackVersion { get; set; }
         public string AppdataVersion { get; set; }
-        public string JaTitleVersion { get; set; }
+        public string TrackLangVersion { get; set; }
     }
 }

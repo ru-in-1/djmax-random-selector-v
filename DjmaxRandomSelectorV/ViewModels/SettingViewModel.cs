@@ -3,10 +3,12 @@ using DjmaxRandomSelectorV.Messages;
 using DjmaxRandomSelectorV.Models;
 using Dmrsv.RandomSelector;
 using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows;
+using System.Windows.Input;
 
 namespace DjmaxRandomSelectorV.ViewModels
 {
@@ -17,7 +19,11 @@ namespace DjmaxRandomSelectorV.ViewModels
         private readonly IFileManager _fileManager;
         private readonly SettingMessage _message;
         private readonly List<Category> _categories;
-        private readonly List<GameLanguage> _gameLanguages;
+        private readonly List<string> _gameLanguages;
+        private int _currentLanguageIndex;
+
+        public ICommand PreviousLanguageCommand { get; }
+        public ICommand NextLanguageCommand { get; }
 
         public bool IsPlaylist
         {
@@ -56,7 +62,6 @@ namespace DjmaxRandomSelectorV.ViewModels
             }
         }
         public BindableCollection<ListUpdater> CategoryUpdaters { get; }
-        public BindableCollection<GameLanguage> AvailableGameLanguages { get; }
 
         public SettingViewModel(IEventAggregator eventAggregator, IFileManager fileManager)
         {
@@ -78,9 +83,23 @@ namespace DjmaxRandomSelectorV.ViewModels
             var updaters = _categories.ConvertAll(x => new ListUpdater(x.Name, x.Id, _message.OwnedDlcs));
             CategoryUpdaters = new BindableCollection<ListUpdater>(updaters);
 
-            // Initialize available game languages from container
-            _gameLanguages = IoC.Get<GameLanguageContainer>().GetGameLanguages();
-            AvailableGameLanguages = new BindableCollection<GameLanguage>(_gameLanguages);
+            _gameLanguages = IoC.Get<List<string>>();
+            _currentLanguageIndex = _gameLanguages.IndexOf(_message.GameLanguage);
+
+            PreviousLanguageCommand = new RelayCommand(OnPreviousLanguageClick);
+            NextLanguageCommand = new RelayCommand(OnNextLanguageClick);
+        }
+
+        private void OnPreviousLanguageClick()
+        {
+            _currentLanguageIndex = (_currentLanguageIndex - 1 + _gameLanguages.Count) % _gameLanguages.Count;
+            GameLanguage = _gameLanguages[_currentLanguageIndex];
+        }
+
+        private void OnNextLanguageClick()
+        {
+            _currentLanguageIndex = (_currentLanguageIndex + 1) % _gameLanguages.Count;
+            GameLanguage = _gameLanguages[_currentLanguageIndex];
         }
 
         public void DetectDlcs()
@@ -126,6 +145,34 @@ namespace DjmaxRandomSelectorV.ViewModels
         public void Cancel()
         {
             TryCloseAsync(false);
+        }
+    }
+
+    public class RelayCommand : ICommand
+    {
+        private readonly System.Action _execute;
+        private readonly System.Func<bool> _canExecute;
+
+        public RelayCommand(System.Action execute, System.Func<bool> canExecute = null)
+        {
+            _execute = execute ?? throw new ArgumentNullException(nameof(execute));
+            _canExecute = canExecute;
+        }
+
+        public event EventHandler CanExecuteChanged
+        {
+            add { CommandManager.RequerySuggested += value; }
+            remove { CommandManager.RequerySuggested -= value; }
+        }
+
+        public bool CanExecute(object parameter)
+        {
+            return _canExecute == null || _canExecute();
+        }
+
+        public void Execute(object parameter)
+        {
+            _execute();
         }
     }
 }

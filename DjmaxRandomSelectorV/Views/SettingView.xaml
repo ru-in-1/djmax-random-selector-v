@@ -67,16 +67,29 @@
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="IN-GAME LANGUAGE"/>
-                        <ComboBox x:Name="GameLanguageSelector"
-                                 Grid.Column="1"
-                                 Width="120"
-                                 HorizontalAlignment="Right"
-                                 Margin="0 0 10 0"
-                                 ItemsSource="{Binding AvailableGameLanguages}"
-                                 DisplayMemberPath="Value"
-                                 SelectedValuePath="Key"
-                                 SelectedValue="{Binding GameLanguage}"
-                                 Style="{StaticResource SettingComboBox}"/>
+                        <Grid Grid.Column="1" Margin="0,0,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="30"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="30"/>
+                            </Grid.ColumnDefinitions>
+                            <Button Grid.Column="0"
+                                    Command="{Binding PreviousLanguageCommand}"
+                                    Style="{StaticResource SettingTriangleLeftButton}"
+                                    Width="20"
+                                    Height="12"/>
+                            <TextBlock Text="{Binding GameLanguage}"
+                                       TextAlignment="Center"
+                                       Grid.Column="1"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Center"
+                                       Foreground="White" Margin="0,0,0,0"/>
+                            <Button Grid.Column="2"
+                                    Command="{Binding NextLanguageCommand}"
+                                    Style="{StaticResource SettingTriangleRightButton}"
+                                    Width="20"
+                                    Height="12"/>
+                        </Grid>
                     </Grid>
                     <Grid>
                         <Grid.ColumnDefinitions>

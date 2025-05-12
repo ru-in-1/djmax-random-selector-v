@@ -15,7 +15,7 @@ namespace DjmaxRandomSelectorV
         public bool SavesRecents { get; set; } = false;
         public List<int> RecentPlayed { get; set; } = new();
         public uint StartKeyCode { get; set; } = 118;
-        public string GameLanguage { get; set; } = "ko_KR";
+        public string GameLanguage { get; set; } = "KOREAN";
 
         /*************** Filter Option *****************/
         public int RecentsCount { get; set; } = 5;
@@ -32,6 +32,6 @@ namespace DjmaxRandomSelectorV
         /*************** Version Info *****************/
         public long AllTrackVersion { get; set; } = 0;
         public string AppdataVersion { get; set; } = string.Empty;
-        public string JaTitleVersion { get; set; } = string.Empty;
+        public string TrackLangVersion { get; set; } = string.Empty;
     }
 }
