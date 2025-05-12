@@ -363,3 +363,14 @@ MigrationBackup/
 FodyWeavers.xsd
 /AnalysisReport.sarif
 /upgrade-assistant.clef
+
+# python files
+*.py
+*.pyc
+*.pyo
+*.pyd
+*.pyw
+*.pyz
+
+#
+.venv/
